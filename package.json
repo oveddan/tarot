@@ -8,6 +8,7 @@
     "react-dom": "^16.2.0",
     "react-scripts": "1.1.1"
   },
+  "homepage": "http://danioved.com/tarot",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
