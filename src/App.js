@@ -149,15 +149,17 @@ class AppContainer extends Component {
     revealedCount: 0
   }
 
+  handleKeyPressed = (e) => {
+    if (e.key === ' ') {
+      e.preventDefault()
+        this.revealNextCard()
+    }
+  }
+
   componentDidMount() {
-    document.addEventListener('keypress', e => {
-      if (e.key === ' ') {
-        e.preventDefault()
-        if (this.state.revealedCount === 10)
-          this.restart()
-        else
-          this.revealNextCard()
-      }
+    document.addEventListener('keypress', this.handleKeyPressed)
+    document.addEventListener('click', e => {
+      this.revealNextCard()
     })
   }
 
@@ -169,9 +171,12 @@ class AppContainer extends Component {
   }
 
   revealNextCard(){
-    this.setState({
-      revealedCount: Math.min(10, this.state.revealedCount + 1)
-    })
+    if (this.state.revealedCount === 10)
+      this.restart()
+    else
+      this.setState({
+        revealedCount: Math.min(10, this.state.revealedCount + 1)
+      })
   }
 
   render() {
