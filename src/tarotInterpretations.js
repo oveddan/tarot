@@ -100,7 +100,7 @@ const tarotInterpretations =  [
                 "Refusing to become involved, even when involvement is appropriate"
             ]
         },
-        "name": "The Papess/High Priestess",
+        "name": "The Papess",
         "rank": 2,
         "suit": "major"
     },
@@ -204,7 +204,7 @@ const tarotInterpretations =  [
                 "Restricting access to spiritual truths or the gods"
             ]
         },
-        "name": "The Pope/Hierophant",
+        "name": "The Pope",
         "rank": 5,
         "suit": "major"
     },
