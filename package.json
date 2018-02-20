@@ -11,8 +11,6 @@
   "homepage": "http://danioved.com/tarot",
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "build": "react-scripts build"
   }
 }

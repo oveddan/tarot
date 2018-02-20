@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { range, sample, sampleSize } from 'lodash'
-import logo from './logo.svg';
 import './App.css';
 import tarotInterpretations from './tarotInterpretations'
 import CardContents, { cardWidth, cardHeight } from './cardContents'
