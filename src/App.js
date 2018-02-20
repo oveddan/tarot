@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { range, sampleSize } from 'lodash'
 import logo from './logo.svg';
 import './App.css';
 import tarotInterpretations from './tarotInterpretations'
@@ -9,42 +10,29 @@ const getCenterY = y => y - cardHeight/2
 
 class Card extends Component {
   state = {
-    lastLocations: [{x: 0, y: 0}],
+    lastLocation: {x: 0, y: 0},
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.x !== this.props.x || nextProps.y !== this.props.y) {
       this.setState({
-        lastLocations: [
-          ...this.state.lastLocations,
-          {
-            x: nextProps.x,
-            y: nextProps.y,
-          }
-        ]
+        lastLocation: {
+          x: this.props.x,
+          y: this.props.y
+        }
       })
     }
   }
   render () {
-    const { x, y, rotation = 0, tarot, revealed } = this.props
+    const { x, y, rotation = 0, tarotId, revealed } = this.props
     const { lastLocation } = this.state
     const centerX = getCenterX(x)
     const centerY = getCenterY(y)
 
     return (
       <g transform={`translate(${centerX}, ${centerY})`}>
-        {this.state.animate && (
-          <animateTransform key={lastLocation.index} attributeName='transform'
-            attributeType='XML'
-            type='translate'
-            from={`${getCenterX(lastLocation.x)} ${getCenterY(lastLocation.y)}`}
-            to={`${centerX}, ${centerY}`}
-            dur='1s'
-            begin='0s'
-          />
-        )}
         <g transform={rotation !== 0 ? `rotate(${rotation} ${cardWidth/2} ${cardHeight/2})` : ''}>
-          <CardContents tarot={tarot} revealed={revealed} />
+          <CardContents tarot={tarotInterpretations[tarotId]} revealed={revealed} />
         </g>
       </g>
     )
@@ -122,7 +110,14 @@ const xyAndRotationOfCard = (cardIndex, revealedCount) => {
   }
 }
 
-const App = ({tarots, revealedCount}) => (
+const getBgFill = (tarotIds, revealedCount) => {
+  if (revealedCount === 0) return '#E2DED4'
+
+  return '#E2DED4'
+  // return tarotInterpretations[tarodIds[revealedCount + 1]]
+}
+
+const App = ({tarotIds, revealedCount}) => (
   <svg version="1.1" baseProfile="full" width={width} height={height} xmlns="http://www.w3.org/2000/svg">
     <defs>
       <clipPath id="round-corners">
@@ -130,27 +125,17 @@ const App = ({tarots, revealedCount}) => (
       </clipPath>
     </defs>
 
-    <rect width='800' height='800' fill='#E2DED4' />
-    {tarots.map((tarot, i) => (
-      <Card key={i} {...xyAndRotationOfCard(i, revealedCount)} tarot={tarot} revealed={revealedCount > i} />
+    <rect width='800' height='800' fill={getBgFill(tarotIds, revealedCount)} />
+    {tarotIds.map((tarotId, i) => (
+      <Card key={i} {...xyAndRotationOfCard(i, revealedCount)} tarotId={tarotId} revealed={revealedCount > i} />
     ))}
   </svg>
 )
 
 class AppContainer extends Component {
   state = {
-    tarots: [
-      tarotInterpretations[0],
-      tarotInterpretations[1],
-      tarotInterpretations[2],
-      tarotInterpretations[3],
-      tarotInterpretations[4],
-      tarotInterpretations[5],
-      tarotInterpretations[6],
-      tarotInterpretations[7],
-      tarotInterpretations[8],
-      tarotInterpretations[9]
-    ],
+    tarotIds: sampleSize(range(tarotInterpretations.length), 10),
+    // tarotIds: [64, 64, 40, 66, 67, 68, 70, 71, 72],
     revealedCount: 0
   }
 
