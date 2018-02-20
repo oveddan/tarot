@@ -53,8 +53,8 @@ export const getColorScheme = (({ name, rank, suit }) => {
 
 const BackgroundColors = ({ colorA, colorB }) => (
   <g clipPath='url(#round-corners)'>
-    <rect width={cardWidth} height={cardHeight/2} fill={colorA}  />
-    <rect width={cardWidth} y={cardHeight/2} height={cardHeight/2} fill={colorB} />
+    <rect width={cardWidth} height={cardHeight/2} fill={colorA}  opacity='.6' />
+    <rect width={cardWidth} y={cardHeight/2} height={cardHeight/2} fill={colorB} opacity='.6'/>
   </g>
 )
 

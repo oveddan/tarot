@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { range, sampleSize } from 'lodash'
+import { range, sample, sampleSize } from 'lodash'
 import logo from './logo.svg';
 import './App.css';
 import tarotInterpretations from './tarotInterpretations'
@@ -117,7 +117,7 @@ const yCenter = revealedCount => {
   return xyAndRotationOfCard(revealedCount - 1).y
 }
 
-const App = ({tarotIds, revealedCount}) => (
+const App = ({tarots, revealedCount}) => (
   <svg version="1.1" baseProfile="full" width={width} height={height} xmlns="http://www.w3.org/2000/svg">
     <defs>
       <clipPath id="round-corners">
@@ -125,16 +125,28 @@ const App = ({tarotIds, revealedCount}) => (
       </clipPath>
     </defs>
 
-    <Background yCenter={yCenter(revealedCount)} currentTarot={revealedCount===0 ? null : tarotInterpretations[tarotIds[revealedCount-1]]} />
-    {tarotIds.map((tarotId, i) => (
-      <Card key={i} {...xyAndRotationOfCard(i, revealedCount)} tarot={tarotInterpretations[tarotId]} revealed={revealedCount > i} />
+    <Background rotate={revealedCount===2} yCenter={yCenter(revealedCount)} currentTarot={revealedCount===0 ? null : tarots[revealedCount-1]} />
+    {tarots.map((tarot, i) => (
+      <Card key={i} {...xyAndRotationOfCard(i, revealedCount)} tarot={tarot} revealed={revealedCount > i} />
     ))}
   </svg>
 )
 
+const randomTarotIds = () => sampleSize(range(tarotInterpretations.length), 10)
+
+const randomTarots = () => sampleSize(tarotInterpretations, 10).map(tarotInterpretation => ({
+  name: tarotInterpretation.name,
+  rank: tarotInterpretation.rank,
+  suit: tarotInterpretation.suit,
+  fortune_telling: sample(tarotInterpretation.fortune_telling),
+  keyword: sample(tarotInterpretation.keywords),
+  lightMeaning: sample(tarotInterpretation.meanings.light),
+  shadowMeaning: sample(tarotInterpretation.meanings.shadow)
+}))
+
 class AppContainer extends Component {
   state = {
-    tarotIds: sampleSize(range(tarotInterpretations.length), 10),
+    tarots: randomTarots(),
     revealedCount: 0
   }
 
@@ -142,8 +154,18 @@ class AppContainer extends Component {
     document.addEventListener('keypress', e => {
       if (e.key === ' ') {
         e.preventDefault()
-        this.revealNextCard()
+        if (this.state.revealedCount === 10)
+          this.restart()
+        else
+          this.revealNextCard()
       }
+    })
+  }
+
+  restart(){
+    this.setState({
+      tarots: randomTarots(),
+      revealedCount: 0
     })
   }
 
